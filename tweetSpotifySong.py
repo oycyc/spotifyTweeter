@@ -1,12 +1,11 @@
+from pytz import timezone
+from datetime import datetime
+#from time import sleep
+from secret import *
 import spotipy
-import spotipy.util as util
 import tweepy
 #import schedule
-import pytz
-from pytz import timezone ## ??
-from datetime import datetime
-from time import sleep
-from secret import *
+
 
 def isPlaying():
     sp = spotipy.Spotify(auth=spotifyToken())
@@ -20,13 +19,15 @@ def isPlaying():
     #return currentSongInformation['item']['name'], currentSongInformation['item']['album']['name'], \
     #       currentSongInformation['item']['artists'][0]['name'], currentSongInformation['item']['album']['images'][0]['url']
 
-def tweetSpotifyStatus():
-    api = tweepy.API(twitterAuthentication())
-    username = api.me().name
+def deleteLatestTweet():
+    return "Successfully deleted the latest tweet: " + \
+    api.destroy_status(api.user_timeline(count = 1)[0].id).text
 
-    # using pytz to use Eastern timezone since heroku's local timezone is different
-    # find a way to change timezone w/o pytz
-    
+def tweetSpotifyStatus():
+    """
+    using pytz to use Eastern timezone since heroku's local timezone is different
+    find a way to change timezone w/o pytz
+    """
     eastern = timezone('US/Eastern')
     # returns the data for Eastern time currently
     currentEasternTime = datetime.now().astimezone(eastern)
@@ -34,7 +35,6 @@ def tweetSpotifyStatus():
     hour = currentEasternTime.strftime("%I%p").lstrip('0').lower()
     # returns weekday (%A) + month as # (%m) + day of month as # (%d)
     day = currentEasternTime.strftime("%A %m/%d")
-    
     
     if isPlaying() == True:
         try:
@@ -48,12 +48,16 @@ def tweetSpotifyStatus():
             api.update_status(f"{username} is NOT currently listening to Spotify as of {hour} {day}.")
         except tweepy.TweepError as e:
             print(e) 
-	
+    
 #schedule.every().minute.do(tweetSpotifyStatus)
 
 if __name__ == "__main__":
+    api = tweepy.API(twitterAuthentication())
+    username = api.me().name
+    print("Authenticated as " + username)
     print("Tweeting the status of your Spotify account every hour.")
     tweetSpotifyStatus()
+
     #while True:
     #    schedule.run_pending()
     #    sleep(1)
@@ -62,3 +66,4 @@ if __name__ == "__main__":
 ## if there's an error in twitter api with code, 
 ## look up the reason for the error in twitter documentation 
 ## https://developer.twitter.com/en/support/twitter-api/error-troubleshooting
+## https://stackoverflow.com/questions/17157753/get-the-error-code-from-tweepy-exception-instance
