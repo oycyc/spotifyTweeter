@@ -6,7 +6,6 @@ import spotipy
 import tweepy
 #import schedule
 
-
 def isPlaying():
     sp = spotipy.Spotify(auth=spotifyToken())
     if sp.currently_playing() != None:
@@ -20,14 +19,18 @@ def isPlaying():
     #       currentSongInformation['item']['artists'][0]['name'], currentSongInformation['item']['album']['images'][0]['url']
 
 def deleteLatestTweet():
-    return "Successfully deleted the latest tweet: " + \
-    api.destroy_status(api.user_timeline(count = 1)[0].id).text
+    latestTweet = api.user_timeline(count = 1)[0]
+    message = f"You're about to delete {latestTweet.text}. Would you like to continue? yes or no"
+    if (input(message) == "yes"):
+        return "Successfully deleted the latest tweet: " + \
+        api.destroy_status(latestTweet.id).text
+    else:
+        return "No message has been deleted."
 
+#def spotifySongInfo():
+
+    
 def tweetSpotifyStatus():
-    """
-    using pytz to use Eastern timezone since heroku's local timezone is different
-    find a way to change timezone w/o pytz
-    """
     eastern = timezone('US/Eastern')
     # returns the data for Eastern time currently
     currentEasternTime = datetime.now().astimezone(eastern)
@@ -61,9 +64,3 @@ if __name__ == "__main__":
     #while True:
     #    schedule.run_pending()
     #    sleep(1)
-
-## fun to-dos
-## if there's an error in twitter api with code, 
-## look up the reason for the error in twitter documentation 
-## https://developer.twitter.com/en/support/twitter-api/error-troubleshooting
-## https://stackoverflow.com/questions/17157753/get-the-error-code-from-tweepy-exception-instance
