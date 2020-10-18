@@ -19,5 +19,3 @@ def twitterAuthentication():
     auth = tweepy.OAuthHandler(apiKey, apiSecretKey)
     auth.set_access_token(accessToken, accessTokenSecret)
     return auth
-    
-    

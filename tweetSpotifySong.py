@@ -61,7 +61,7 @@ def tweetSpotifyStatus():
         except tweepy.TweepError as e:
             print(e) 
     
-#schedule.every().minute.do(tweetSpotifyStatus)
+#schedule.every().hour.do(tweetSpotifyStatus)
 
 if __name__ == "__main__":
     sp = spotipy.Spotify(auth=spotifyToken())
@@ -74,5 +74,3 @@ if __name__ == "__main__":
     #while True:
     #    schedule.run_pending()
     #    sleep(1)
-
-# tweetspotifystatus() make it an option of what user wants to tweet out 
