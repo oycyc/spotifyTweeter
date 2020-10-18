@@ -13,14 +13,17 @@ def isPlaying():
         return False
     
 def spotifySongInfo():
+    # get info on current song, returns as a dictionary, access the information
     currentSongInformation = sp.currently_playing()
     songName = currentSongInformation['item']['name']
-    albumName = currentSongInformation['item']['album']['name']
+    if (currentSongInformation['item']['album']['album_type'] == 'single'):
+        albumName = None
+    else:
+        albumName = currentSongInformation['item']['album']['name']
     songArtist = currentSongInformation['item']['artists'][0]['name']
     songLink = currentSongInformation['item']['external_urls']['spotify']
     return songName, albumName, songArtist, songLink
     
-
 def deleteLatestTweet():
     latestTweet = api.user_timeline(count = 1)[0]
     message = f"You're about to delete {latestTweet.text}. Would you like to continue? yes or no\n"
@@ -42,8 +45,13 @@ def tweetSpotifyStatus():
     
     if isPlaying() == True:
         try:
-            print(f"Posting the current status as of {hour} {day}: True")
-            api.update_status(f"{username} is currently listening to Spotify as of {hour} {day}.")
+            song, album, artist, link = spotifySongInfo()
+            if (album): # see if it has an album, if so, tweet the album as well
+                print(f"Posting the current status as of {hour} {day}: {song} of album {album} by {artist} on {hour} {day}.\nSpotify Link: {link}")
+                api.update_status(f"{username} is currently listening to {song} of the album {album} by {artist} as of {hour} {day}.{link}")
+                return
+            api.update_status(f"{username} is currently listening to {song} by {artist} as of {hour} {day}.{link}")
+            print(f"Posting the current status as of {hour} {day}: {song} by {artist} on {hour} {day}.\nSpotify Link: {link}")
         except tweepy.TweepError as e:
             print(e)
     else:
