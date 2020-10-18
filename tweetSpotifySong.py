@@ -7,30 +7,31 @@ import tweepy
 #import schedule
 
 def isPlaying():
-    sp = spotipy.Spotify(auth=spotifyToken())
     if sp.currently_playing() != None:
         return True
     else:
         return False
     
-    #currentSongInformation = sp.currently_playing()
-    # song name, album name, song artist, album cover picture
-    #return currentSongInformation['item']['name'], currentSongInformation['item']['album']['name'], \
-    #       currentSongInformation['item']['artists'][0]['name'], currentSongInformation['item']['album']['images'][0]['url']
+def spotifySongInfo():
+    currentSongInformation = sp.currently_playing()
+    songName = currentSongInformation['item']['name']
+    albumName = currentSongInformation['item']['album']['name']
+    songArtist = currentSongInformation['item']['artists'][0]['name']
+    songLink = currentSongInformation['item']['external_urls']['spotify']
+    return songName, albumName, songArtist, songLink
+    
 
 def deleteLatestTweet():
     latestTweet = api.user_timeline(count = 1)[0]
-    message = f"You're about to delete {latestTweet.text}. Would you like to continue? yes or no"
+    message = f"You're about to delete {latestTweet.text}. Would you like to continue? yes or no\n"
     if (input(message) == "yes"):
         return "Successfully deleted the latest tweet: " + \
         api.destroy_status(latestTweet.id).text
     else:
         return "No message has been deleted."
-
-#def spotifySongInfo():
-
     
 def tweetSpotifyStatus():
+    # using pytz to use the Eastern timezone, necessary bc Heroku's local timezones differ
     eastern = timezone('US/Eastern')
     # returns the data for Eastern time currently
     currentEasternTime = datetime.now().astimezone(eastern)
@@ -55,6 +56,7 @@ def tweetSpotifyStatus():
 #schedule.every().minute.do(tweetSpotifyStatus)
 
 if __name__ == "__main__":
+    sp = spotipy.Spotify(auth=spotifyToken())
     api = tweepy.API(twitterAuthentication())
     username = api.me().name
     print("Authenticated as " + username)
@@ -64,3 +66,5 @@ if __name__ == "__main__":
     #while True:
     #    schedule.run_pending()
     #    sleep(1)
+
+# tweetspotifystatus() make it an option of what user wants to tweet out 
