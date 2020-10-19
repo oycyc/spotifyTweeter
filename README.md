@@ -13,4 +13,4 @@ I run these files on Heroku, so I use their [scheduler add on](https://devcenter
 
 ## Example
 
-An example of this script in use is [BenjaTheWorst's Twitter account](https://twitter.com/to_spotify). The script in use is a different version, it only tweets if the user is listening or not.
+An example of this script in use is [BenjaTheWorst's Twitter account](https://twitter.com/to_spotify). The script in use is a different version, it only tweets if the user is listening or not to replicate Discord's statys for Spotify.
