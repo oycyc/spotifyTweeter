@@ -5,7 +5,7 @@ Spotify Status Tweeter is a Python script that tweets the status of your Spotify
 
 ## How to use
 
-Simply download the source code and make sure that the required packages are installed from pip. Input your credentials in the `secret.py` file, these can be created from the Twitter and Spotify Developer portals. Then, run `tweetSpotifySong.py` and it should work -- if you are playing a song, it will tweet that along with the song information, if not, it'll tweet that you're not listening to Spotify at the moment.
+Simply download the source code and make sure that the required packages are installed from pip. Input your credentials in the `secret.py` file, these can be created from the Twitter and Spotify Developer dashboards. Then, run `tweetSpotifySong.py` and it should work -- if you are playing a song, it will tweet that along with the song information, if not, it'll tweet that you're not listening to Spotify at the moment.
 
 ## Heroku
 
